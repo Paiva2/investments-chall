@@ -4,10 +4,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.main.backendtest.dtos.request.AuthUserDto;
 import com.main.backendtest.dtos.request.RegisterUserDto;
 import com.main.backendtest.entities.User;
 import com.main.backendtest.exceptions.BadRequestException;
 import com.main.backendtest.exceptions.ConflictException;
+import com.main.backendtest.exceptions.ForbiddenException;
+import com.main.backendtest.exceptions.NotFoundException;
 import com.main.backendtest.interfaces.UserInterface;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -65,5 +68,30 @@ public class UserService {
         }
 
         return userCreation;
+    }
+
+    public User auth(AuthUserDto dto) {
+        if (dto == null) {
+            throw new BadRequestException("Invalid dto.");
+        }
+
+        if (dto.getPassword().length() < 6) {
+            throw new BadRequestException("Password must have at least 6 characters.");
+        }
+
+        Optional<User> doesUserExists = this.userRepository.findByEmail(dto.getEmail());
+
+        if (doesUserExists.isEmpty()) {
+            throw new NotFoundException("User not found.");
+        }
+
+        boolean doesPasswordMatches =
+                this.bcrypt.matches(dto.getPassword(), doesUserExists.get().getPasswordHash());
+
+        if (!doesPasswordMatches) {
+            throw new ForbiddenException("Wrong credentials.");
+        }
+
+        return doesUserExists.get();
     }
 }
