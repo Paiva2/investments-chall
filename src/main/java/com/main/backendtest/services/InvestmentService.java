@@ -1,10 +1,15 @@
 package com.main.backendtest.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 import java.util.Optional;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeParseException;
+
 import org.springframework.stereotype.Service;
 
 import com.main.backendtest.entities.Investment;
@@ -34,7 +39,6 @@ public class InvestmentService {
         this.investmentRepository = investmentRepository;
     }
 
-    // TODO: FIX RETRO INVESTMENT GAINS
     @Transactional
     public Investment create(NewInvestmentDto dto, UUID userId) {
         if (userId == null) {
@@ -63,7 +67,32 @@ public class InvestmentService {
             }
 
             try {
-                newInvestment.setCreatedAt(Instant.parse(dto.getInvestmentDate().toString()));
+                ZoneId zoneId = ZoneId.systemDefault();
+
+                Instant providedDate = Instant.parse(dto.getInvestmentDate().toString());
+
+                LocalDateTime providedDateToCompare =
+                        LocalDateTime.ofInstant(Instant.parse(providedDate.toString()), zoneId);
+
+                long hasRetroGains =
+                        ChronoUnit.MONTHS.between(providedDateToCompare, LocalDateTime.now());
+
+                if (hasRetroGains > 0) {
+                    BigDecimal initAmount = dto.getAmount().divide(BigDecimal.valueOf(100));
+                    BigDecimal gainPercentage = new BigDecimal("0.0052"); // 0.52%
+                    BigDecimal totalGains = new BigDecimal("0");
+
+                    Number[] months = new Number[Integer.valueOf(Long.toString(hasRetroGains))];
+
+                    for (int i = 0; i <= months.length - 1; i++) {
+                        totalGains = totalGains.add(gainPercentage.multiply(initAmount));
+                        initAmount = initAmount.add(totalGains);
+                    }
+
+                    newInvestment.setCurrentProfit(totalGains);
+                }
+
+                newInvestment.setCreatedAt(Instant.parse(providedDate.toString()));
             } catch (DateTimeParseException exception) {
                 System.err.println(exception);
                 throw new BadRequestException("Invalid date.");
@@ -71,8 +100,10 @@ public class InvestmentService {
         }
 
         newInvestment.setWallet(doesUserExists.get().getWallet());
-        newInvestment.setInitialAmount(dto.getAmount());
+        newInvestment.setInitialAmount(dto.getAmount().divide(BigDecimal.valueOf(100)));
 
         return this.investmentRepository.save(newInvestment);
     }
+
+
 }

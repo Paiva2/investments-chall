@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import com.main.backendtest.dtos.request.investment.NewInvestmentDto;
+import com.main.backendtest.dtos.response.NewInvestmentResponseDto;
 import com.main.backendtest.entities.Investment;
 import com.main.backendtest.services.InvestmentService;
 import com.main.backendtest.services.JwtService;
@@ -23,11 +24,12 @@ public class InvestmentController {
     private JwtService jwtService;
 
     @PostMapping("/new")
-    public ResponseEntity<Investment> newInvestment(@RequestBody @Valid NewInvestmentDto dto,
+    public ResponseEntity<NewInvestmentResponseDto> newInvestment(
+            @RequestBody @Valid NewInvestmentDto dto,
             @RequestHeader(name = "Authorization", required = true) String authToken) {
         Investment investment = this.investmentService.create(dto, this.getParsedAuth(authToken));
 
-        return ResponseEntity.status(201).body(investment);
+        return ResponseEntity.status(201).body(this.formatNewInvestmentDto(investment));
     }
 
     private UUID getParsedAuth(String token) {
@@ -36,4 +38,8 @@ public class InvestmentController {
         return UUID.fromString(parseToken);
     }
 
+    private NewInvestmentResponseDto formatNewInvestmentDto(Investment investment) {
+        return new NewInvestmentResponseDto(investment.getId(), investment.getInitialAmount(),
+                investment.getCurrentProfit(), investment.getCreatedAt());
+    }
 }

@@ -3,6 +3,7 @@ package com.main.services.investment;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import org.junit.jupiter.api.*;
@@ -30,7 +31,7 @@ public class NewInvestmentService {
     private InvestmentService sut;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws Exception {
         this.userRepositoryTest = new UserRepositoryTest();
         this.walletRepositoryTest = new WalletRepositoryTest();
         this.investmentRepositoryTest = new InvestmentRepositoryTest();
@@ -51,13 +52,31 @@ public class NewInvestmentService {
         Investment investment = this.sut.create(newInvestment, user.getId());
 
         Assertions.assertNotNull(investment);
-        Assertions.assertEquals(newInvestment.getAmount(), investment.getInitialAmount());
+        Assertions.assertEquals(new BigDecimal("1.0"), investment.getInitialAmount()); // 100
         Assertions.assertEquals(newInvestment.getInvestmentDate(), investment.getCreatedAt());
     }
 
     @Test
-    @DisplayName("it should throw exception if invested initial amount is less than 1")
+    @DisplayName("it should create a new investment with retro gains if provided date is before today")
     public void caseTwo() {
+        User user = this.userGenerator();
+
+        NewInvestmentDto newInvestment = new NewInvestmentDto();
+        newInvestment.setAmount(BigDecimal.valueOf(1000));
+        // 2 months ago
+        newInvestment.setInvestmentDate(ZonedDateTime.now().minusMonths(2).toInstant());
+
+        Investment investment = this.sut.create(newInvestment, user.getId());
+
+        Assertions.assertNotNull(investment);
+        Assertions.assertEquals(new BigDecimal("10"), investment.getInitialAmount()); // 1000
+        Assertions.assertEquals(newInvestment.getInvestmentDate(), investment.getCreatedAt());
+        Assertions.assertEquals(new BigDecimal("0.10427040"), investment.getCurrentProfit()); // 10.42
+    }
+
+    @Test
+    @DisplayName("it should throw exception if invested initial amount is less than 1")
+    public void caseThree() {
         User user = this.userGenerator();
 
         NewInvestmentDto newInvestment = new NewInvestmentDto();
@@ -74,7 +93,7 @@ public class NewInvestmentService {
 
     @Test
     @DisplayName("it should throw exception if investment date is after today")
-    public void caseThree() {
+    public void caseFour() {
         User user = this.userGenerator();
 
         NewInvestmentDto newInvestment = new NewInvestmentDto();
@@ -95,7 +114,7 @@ public class NewInvestmentService {
 
     @Test
     @DisplayName("it should throw exception if investment date is after today")
-    public void caseFour() {
+    public void caseFive() {
         NewInvestmentDto newInvestment = new NewInvestmentDto();
         newInvestment.setAmount(BigDecimal.valueOf(100.0));
 
@@ -108,7 +127,7 @@ public class NewInvestmentService {
 
     @Test
     @DisplayName("it should throw exception if for some reason user doesn't have a wallet")
-    public void caseFive() {
+    public void caseSix() {
         User user = new User();
 
         user.setEmail("johndoe2@test.com");
@@ -130,7 +149,7 @@ public class NewInvestmentService {
 
     @Test
     @DisplayName("it should throw exception if user id DTO is null")
-    public void caseSix() {
+    public void caseSeven() {
         NewInvestmentDto newInvestment = new NewInvestmentDto();
         newInvestment.setAmount(BigDecimal.valueOf(100));
 
