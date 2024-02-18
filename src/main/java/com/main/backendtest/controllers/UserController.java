@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.main.backendtest.dtos.request.AuthUserDto;
-import com.main.backendtest.dtos.request.RegisterUserDto;
+import com.main.backendtest.dtos.request.user.AuthUserDto;
+import com.main.backendtest.dtos.request.user.RegisterUserDto;
 import com.main.backendtest.entities.User;
 import com.main.backendtest.services.JwtService;
 import com.main.backendtest.services.UserService;

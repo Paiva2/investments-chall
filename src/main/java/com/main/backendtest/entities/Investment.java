@@ -1,10 +1,10 @@
 package com.main.backendtest.entities;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
-import org.hibernate.annotations.CreationTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_investments")
-public class Investiment {
+public class Investment {
     @Id
     @GeneratedValue(generator = "uuid2")
     private UUID id;
@@ -25,18 +25,18 @@ public class Investiment {
     private BigDecimal initialAmount;
 
     @Column(name = "current_profit", nullable = false)
-    private BigDecimal currentProfit = BigDecimal.valueOf(0.0);;
+    private BigDecimal currentProfit = BigDecimal.valueOf(0.0);
 
     @Column(name = "withdrawn_date", nullable = true)
-    private Date withdrawnDate;
+    private Instant withdrawnDate;
 
     @Column(name = "already_withdrawn", nullable = false)
-    private boolean alreadyWithdrawn;
+    private boolean alreadyWithdrawn = false;
 
-    @CreationTimestamp
     @Column(name = "created_at")
-    private Date createdAt;
+    private Instant createdAt = Instant.now();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;

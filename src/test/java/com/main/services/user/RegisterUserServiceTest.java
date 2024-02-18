@@ -1,9 +1,9 @@
-package com.main.services;
+package com.main.services.user;
 
 import org.junit.jupiter.api.*;
 
 import com.main.repositories.*;
-import com.main.backendtest.dtos.request.RegisterUserDto;
+import com.main.backendtest.dtos.request.user.RegisterUserDto;
 import com.main.backendtest.entities.User;
 import com.main.backendtest.exceptions.BadRequestException;
 import com.main.backendtest.exceptions.ConflictException;

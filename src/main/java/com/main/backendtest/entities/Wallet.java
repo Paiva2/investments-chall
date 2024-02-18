@@ -42,5 +42,5 @@ public class Wallet {
 
     @OneToMany(mappedBy = "wallet")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Investiment> investiments;
+    private List<Investment> investiments;
 }

@@ -20,15 +20,20 @@ public class UserRepositoryTest implements UserInterface {
                 this.users.stream().filter(users -> users.getId().equals(user.getId())).findFirst();
 
         if (doesUserExists.isEmpty()) {
-            user.setId(UUID.randomUUID());
+            // In some tests we need to pass userId before send user
+            // entity to repository
+            if (user.getId() == null) {
+                user.setId(UUID.randomUUID());
+            }
+
             this.users.add(user);
 
             handleUser = user;
         } else {
-            int getCurrWalletIdx = this.users.indexOf(doesUserExists.get());
-            this.users.set(getCurrWalletIdx, user);
+            int getCurrentUserIdx = this.users.indexOf(doesUserExists.get());
+            this.users.set(getCurrentUserIdx, user);
 
-            handleUser = this.users.get(getCurrWalletIdx);
+            handleUser = this.users.get(getCurrentUserIdx);
         }
 
         return handleUser;
@@ -40,4 +45,9 @@ public class UserRepositoryTest implements UserInterface {
                 .filter(user -> user.getEmail().hashCode() == findByEmail.hashCode()).findFirst();
     }
 
+    @Override
+    public Optional<User> findById(UUID userId) {
+        return this.users.stream().filter(user -> user.getId().hashCode() == userId.hashCode())
+                .findFirst();
+    }
 }

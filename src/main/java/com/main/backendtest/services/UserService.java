@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.main.backendtest.dtos.request.AuthUserDto;
-import com.main.backendtest.dtos.request.RegisterUserDto;
+import com.main.backendtest.dtos.request.user.AuthUserDto;
+import com.main.backendtest.dtos.request.user.RegisterUserDto;
 import com.main.backendtest.entities.User;
 import com.main.backendtest.exceptions.BadRequestException;
 import com.main.backendtest.exceptions.ConflictException;
