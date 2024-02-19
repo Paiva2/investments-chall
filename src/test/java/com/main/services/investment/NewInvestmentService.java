@@ -52,7 +52,7 @@ public class NewInvestmentService {
         Investment investment = this.sut.create(newInvestment, user.getId());
 
         Assertions.assertNotNull(investment);
-        Assertions.assertEquals(new BigDecimal("1.0"), investment.getInitialAmount()); // 100
+        Assertions.assertEquals(new BigDecimal("1.00"), investment.getInitialAmount()); // 100
         Assertions.assertEquals(newInvestment.getInvestmentDate(), investment.getCreatedAt());
     }
 
@@ -69,9 +69,9 @@ public class NewInvestmentService {
         Investment investment = this.sut.create(newInvestment, user.getId());
 
         Assertions.assertNotNull(investment);
-        Assertions.assertEquals(new BigDecimal("10"), investment.getInitialAmount()); // 1000
+        Assertions.assertEquals(new BigDecimal("10.00"), investment.getInitialAmount()); // 1000
         Assertions.assertEquals(newInvestment.getInvestmentDate(), investment.getCreatedAt());
-        Assertions.assertEquals(new BigDecimal("0.10427040"), investment.getCurrentProfit()); // 10.42
+        Assertions.assertEquals(new BigDecimal("0.10"), investment.getCurrentProfit()); // 10.42
     }
 
     @Test

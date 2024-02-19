@@ -10,6 +10,9 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeParseException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.main.backendtest.entities.Investment;
@@ -79,8 +82,8 @@ public class InvestmentService {
 
                 if (hasRetroGains > 0) {
                     BigDecimal initAmount = dto.getAmount().divide(BigDecimal.valueOf(100));
-                    BigDecimal gainPercentage = new BigDecimal("0.0052"); // 0.52%
-                    BigDecimal totalGains = new BigDecimal("0");
+                    BigDecimal gainPercentage = BigDecimal.valueOf(0.0052); // 0.52%
+                    BigDecimal totalGains = BigDecimal.valueOf(0);
 
                     Number[] months = new Number[Integer.valueOf(Long.toString(hasRetroGains))];
 
@@ -89,7 +92,7 @@ public class InvestmentService {
                         initAmount = initAmount.add(totalGains);
                     }
 
-                    newInvestment.setCurrentProfit(totalGains);
+                    newInvestment.setCurrentProfit(totalGains.setScale(2, RoundingMode.DOWN));
                 }
 
                 newInvestment.setCreatedAt(Instant.parse(providedDate.toString()));
@@ -100,10 +103,35 @@ public class InvestmentService {
         }
 
         newInvestment.setWallet(doesUserExists.get().getWallet());
-        newInvestment.setInitialAmount(dto.getAmount().divide(BigDecimal.valueOf(100)));
+        newInvestment.setInitialAmount(
+                dto.getAmount().divide(BigDecimal.valueOf(100), 2, RoundingMode.DOWN));
 
         return this.investmentRepository.save(newInvestment);
     }
 
 
+    public Page<Investment> listByUser(UUID userId, int page, int pageSize) {
+        if (userId == null) {
+            throw new BadRequestException("Invalid user id.");
+        }
+
+        if (page < 1) {
+            page = 1;
+        }
+
+        if (pageSize < 5) {
+            pageSize = 5;
+        }
+
+        Optional<User> doesInvestorExists = this.userRepository.findById(userId);
+
+        if (doesInvestorExists.isEmpty()) {
+            throw new NotFoundException("User not found.");
+        }
+
+        Pageable pageable = PageRequest.of((page - 1), pageSize);
+
+        return this.investmentRepository
+                .findByWalletId(doesInvestorExists.get().getWallet().getId(), pageable);
+    }
 }

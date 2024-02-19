@@ -1,13 +1,20 @@
 package com.main.repositories;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import com.main.backendtest.entities.Investment;
 import com.main.backendtest.interfaces.InvestmentInterface;
 
+@SuppressWarnings("null")
 public class InvestmentRepositoryTest implements InvestmentInterface {
     protected List<Investment> investments = new ArrayList<>();
 
@@ -20,6 +27,11 @@ public class InvestmentRepositoryTest implements InvestmentInterface {
 
         if (doesInvestmentExists.isEmpty()) {
             investiment.setId(UUID.randomUUID());
+
+            if (investiment.getCreatedAt() == null) {
+                investiment.setCreatedAt(Instant.now());
+            }
+
             this.investments.add(investiment);
 
             handleInvestment = investiment;
@@ -31,5 +43,20 @@ public class InvestmentRepositoryTest implements InvestmentInterface {
         }
 
         return handleInvestment;
+    }
+
+    @Override
+    public Page<Investment> findByWalletId(UUID walletId, Pageable pageable) {
+        List<Investment> userInvestments = this.investments.stream()
+                .filter(investments -> investments.getWallet().getId().equals(walletId)).toList();
+
+        int fromIndex = pageable.getPageNumber() * pageable.getPageSize();
+
+        if (userInvestments.size() <= fromIndex) {
+            return new PageImpl<Investment>(Collections.emptyList());
+        }
+
+        return new PageImpl<Investment>(userInvestments.subList(fromIndex,
+                Math.min(fromIndex + pageable.getPageSize(), userInvestments.size())));
     }
 }
