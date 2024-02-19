@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.math.RoundingMode;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,6 +32,11 @@ public class InvestmentRepositoryTest implements InvestmentInterface {
             if (investiment.getCreatedAt() == null) {
                 investiment.setCreatedAt(Instant.now());
             }
+
+            investiment.setCurrentProfit(
+                    investiment.getCurrentProfit().setScale(3, RoundingMode.DOWN));
+            investiment.setInitialAmount(
+                    investiment.getInitialAmount().setScale(3, RoundingMode.DOWN));
 
             this.investments.add(investiment);
 
@@ -58,5 +64,11 @@ public class InvestmentRepositoryTest implements InvestmentInterface {
 
         return new PageImpl<Investment>(userInvestments.subList(fromIndex,
                 Math.min(fromIndex + pageable.getPageSize(), userInvestments.size())));
+    }
+
+    @Override
+    public List<Investment> getAllCreatedToday() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllCreatedToday'");
     }
 }

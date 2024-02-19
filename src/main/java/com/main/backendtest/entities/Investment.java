@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -21,10 +19,10 @@ public class Investment {
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
-    @Column(name = "initial_amount", nullable = false)
+    @Column(name = "initial_amount", nullable = false, precision = 20, scale = 3)
     private BigDecimal initialAmount;
 
-    @Column(name = "current_profit", nullable = false)
+    @Column(name = "current_profit", nullable = false, precision = 20, scale = 3)
     private BigDecimal currentProfit = BigDecimal.valueOf(0.0);
 
     @Column(name = "withdrawn_date", nullable = true)
@@ -36,7 +34,6 @@ public class Investment {
     @Column(name = "created_at")
     private Instant createdAt = Instant.now();
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;

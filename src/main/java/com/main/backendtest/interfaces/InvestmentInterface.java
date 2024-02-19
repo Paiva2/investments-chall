@@ -1,5 +1,6 @@
 package com.main.backendtest.interfaces;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -10,4 +11,6 @@ public interface InvestmentInterface {
     Investment save(Investment investiment);
 
     Page<Investment> findByWalletId(UUID walletId, Pageable pageable);
+
+    List<Investment> getAllCreatedToday();
 }

@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -40,6 +40,7 @@ public class User {
     @UpdateTimestamp
     private Date updatedAt;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Wallet wallet;

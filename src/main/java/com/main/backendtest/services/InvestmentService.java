@@ -81,18 +81,20 @@ public class InvestmentService {
                         ChronoUnit.MONTHS.between(providedDateToCompare, LocalDateTime.now());
 
                 if (hasRetroGains > 0) {
-                    BigDecimal initAmount = dto.getAmount().divide(BigDecimal.valueOf(100));
-                    BigDecimal gainPercentage = BigDecimal.valueOf(0.0052); // 0.52%
-                    BigDecimal totalGains = BigDecimal.valueOf(0);
+                    BigDecimal initAmount = dto.getAmount().divide(new BigDecimal("100"));
+                    BigDecimal gainPercentage = new BigDecimal("0.0052");
+                    BigDecimal totalGains = new BigDecimal("0");
 
                     Number[] months = new Number[Integer.valueOf(Long.toString(hasRetroGains))];
+
+                    System.out.println(months.length);
 
                     for (int i = 0; i <= months.length - 1; i++) {
                         totalGains = totalGains.add(gainPercentage.multiply(initAmount));
                         initAmount = initAmount.add(totalGains);
                     }
 
-                    newInvestment.setCurrentProfit(totalGains.setScale(2, RoundingMode.DOWN));
+                    newInvestment.setCurrentProfit(totalGains.setScale(3, RoundingMode.DOWN));
                 }
 
                 newInvestment.setCreatedAt(Instant.parse(providedDate.toString()));
@@ -104,7 +106,7 @@ public class InvestmentService {
 
         newInvestment.setWallet(doesUserExists.get().getWallet());
         newInvestment.setInitialAmount(
-                dto.getAmount().divide(BigDecimal.valueOf(100), 2, RoundingMode.DOWN));
+                dto.getAmount().divide(new BigDecimal("100")).setScale(3, RoundingMode.DOWN));
 
         return this.investmentRepository.save(newInvestment);
     }

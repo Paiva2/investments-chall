@@ -30,139 +30,153 @@ import com.main.repositories.WalletRepositoryTest;
 
 @ActiveProfiles("test")
 public class ListByuserService {
-    private UserRepositoryTest userRepositoryTest;
+        private UserRepositoryTest userRepositoryTest;
 
-    private WalletRepositoryTest walletRepositoryTest;
+        private WalletRepositoryTest walletRepositoryTest;
 
-    private InvestmentRepositoryTest investmentRepositoryTest;
+        private InvestmentRepositoryTest investmentRepositoryTest;
 
-    private InvestmentService sut;
+        private InvestmentService sut;
 
-    @BeforeEach
-    public void setup() throws Exception {
-        this.userRepositoryTest = new UserRepositoryTest();
-        this.walletRepositoryTest = new WalletRepositoryTest();
-        this.investmentRepositoryTest = new InvestmentRepositoryTest();
+        @BeforeEach
+        public void setup() throws Exception {
+                this.userRepositoryTest = new UserRepositoryTest();
+                this.walletRepositoryTest = new WalletRepositoryTest();
+                this.investmentRepositoryTest = new InvestmentRepositoryTest();
 
-        this.sut = new InvestmentService(this.userRepositoryTest, this.walletRepositoryTest,
-                this.investmentRepositoryTest);
-    }
+                this.sut = new InvestmentService(this.userRepositoryTest, this.walletRepositoryTest,
+                                this.investmentRepositoryTest);
+        }
 
-    @Test
-    @DisplayName("it should list all user investments")
-    public void caseOne() {
-        User user = this.userGenerator();
+        @Test
+        @DisplayName("it should list all user investments")
+        public void caseOne() {
+                User user = this.userGenerator();
 
-        this.investmentGenerator(user.getId(), BigDecimal.valueOf(100.30));
-        this.investmentGenerator(user.getId(), BigDecimal.valueOf(130.20));
-        this.investmentGenerator(user.getId(), BigDecimal.valueOf(2000000.50));
+                this.investmentGenerator(user.getId(), new BigDecimal("100.30"));
+                this.investmentGenerator(user.getId(), new BigDecimal("130.20"));
+                this.investmentGenerator(user.getId(), new BigDecimal("2000000.50"));
 
-        int page = 1;
-        int perPage = 5;
+                int page = 1;
+                int perPage = 5;
 
-        Page<Investment> investments = this.sut.listByUser(user.getId(), page, perPage);
+                Page<Investment> investments = this.sut.listByUser(user.getId(), page, perPage);
 
-        Investment firstInvestment = investments.getContent().get(0);
-        Investment secondInvestment = investments.getContent().get(1);
-        Investment thirdInvestment = investments.getContent().get(2);
+                Investment firstInvestment = investments.getContent().get(0);
+                Investment secondInvestment = investments.getContent().get(1);
+                Investment thirdInvestment = investments.getContent().get(2);
 
-        ZonedDateTime firstInvestmentDate =
-                ZonedDateTime.ofInstant(firstInvestment.getCreatedAt(), ZoneId.systemDefault());
+                ZonedDateTime firstInvestmentDate = ZonedDateTime
+                                .ofInstant(firstInvestment.getCreatedAt(), ZoneId.systemDefault());
 
-        ZonedDateTime secondInvestmentDate =
-                ZonedDateTime.ofInstant(secondInvestment.getCreatedAt(), ZoneId.systemDefault());
+                ZonedDateTime secondInvestmentDate = ZonedDateTime
+                                .ofInstant(secondInvestment.getCreatedAt(), ZoneId.systemDefault());
 
-        ZonedDateTime thirdInvestmentDate =
-                ZonedDateTime.ofInstant(thirdInvestment.getCreatedAt(), ZoneId.systemDefault());
+                ZonedDateTime thirdInvestmentDate = ZonedDateTime
+                                .ofInstant(thirdInvestment.getCreatedAt(), ZoneId.systemDefault());
 
-        Assertions.assertAll("investment assertions",
-                // First Investment
-                () -> assertEquals(BigDecimal.valueOf(100.30 / 100).setScale(2, RoundingMode.DOWN),
-                        firstInvestment.getInitialAmount()),
+                Assertions.assertAll("investment assertions",
+                                // First Investment
+                                () -> assertEquals(
+                                                new BigDecimal("100.30")
+                                                                .divide(new BigDecimal("100"))
+                                                                .setScale(3, RoundingMode.DOWN),
+                                                firstInvestment.getInitialAmount()),
 
-                () -> assertEquals(Calendar.MONTH, firstInvestmentDate.getMonthValue()),
+                                () -> assertEquals(Calendar.MONTH,
+                                                firstInvestmentDate.getMonthValue()),
 
-                () -> assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
-                        firstInvestmentDate.getDayOfMonth()),
+                                () -> assertEquals(
+                                                Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
+                                                firstInvestmentDate.getDayOfMonth()),
 
-                () -> assertEquals(Calendar.getInstance().get(Calendar.YEAR),
-                        firstInvestmentDate.getYear()),
+                                () -> assertEquals(Calendar.getInstance().get(Calendar.YEAR),
+                                                firstInvestmentDate.getYear()),
 
-                // Second investment
-                () -> assertEquals(BigDecimal.valueOf(130.20 / 100).setScale(2, RoundingMode.DOWN),
-                        secondInvestment.getInitialAmount()),
+                                // Second investment
+                                () -> assertEquals(
+                                                new BigDecimal("130.20")
+                                                                .divide(new BigDecimal("100"))
+                                                                .setScale(3, RoundingMode.DOWN),
+                                                secondInvestment.getInitialAmount()),
 
-                () -> assertEquals(Calendar.MONTH, secondInvestmentDate.getMonthValue()),
+                                () -> assertEquals(Calendar.MONTH,
+                                                secondInvestmentDate.getMonthValue()),
 
-                () -> assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
-                        secondInvestmentDate.getDayOfMonth()),
+                                () -> assertEquals(
+                                                Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
+                                                secondInvestmentDate.getDayOfMonth()),
 
-                () -> assertEquals(Calendar.getInstance().get(Calendar.YEAR),
-                        secondInvestmentDate.getYear()),
+                                () -> assertEquals(Calendar.getInstance().get(Calendar.YEAR),
+                                                secondInvestmentDate.getYear()),
 
-                // Third Investment
-                () -> assertEquals(
-                        BigDecimal.valueOf(2000000.50 / 100).setScale(2, RoundingMode.DOWN),
-                        thirdInvestment.getInitialAmount()),
+                                // Third Investment
+                                () -> assertEquals(
+                                                new BigDecimal("2000000.50")
+                                                                .divide(new BigDecimal("100"))
+                                                                .setScale(3, RoundingMode.DOWN),
+                                                thirdInvestment.getInitialAmount()),
 
-                () -> assertEquals(Calendar.MONTH, thirdInvestmentDate.getMonthValue()),
+                                () -> assertEquals(Calendar.MONTH,
+                                                thirdInvestmentDate.getMonthValue()),
 
-                () -> assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
-                        thirdInvestmentDate.getDayOfMonth()),
+                                () -> assertEquals(
+                                                Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
+                                                thirdInvestmentDate.getDayOfMonth()),
 
-                () -> assertEquals(Calendar.getInstance().get(Calendar.YEAR),
-                        thirdInvestmentDate.getYear()));
-    }
+                                () -> assertEquals(Calendar.getInstance().get(Calendar.YEAR),
+                                                thirdInvestmentDate.getYear()));
+        }
 
-    @Test
-    @DisplayName("it should throw an exception if user id DTO is null")
-    public void caseTwo() {
-        int page = 1;
-        int perPage = 5;
+        @Test
+        @DisplayName("it should throw an exception if user id DTO is null")
+        public void caseTwo() {
+                int page = 1;
+                int perPage = 5;
 
-        Exception exception = Assertions.assertThrows(BadRequestException.class, () -> {
-            this.sut.listByUser(null, page, perPage);
-        });
+                Exception exception = Assertions.assertThrows(BadRequestException.class, () -> {
+                        this.sut.listByUser(null, page, perPage);
+                });
 
-        Assertions.assertEquals("Invalid user id.", exception.getMessage());
-    }
+                Assertions.assertEquals("Invalid user id.", exception.getMessage());
+        }
 
-    @Test
-    @DisplayName("it should throw an exception if user doesn't exists")
-    public void caseThree() {
-        int page = 1;
-        int perPage = 5;
+        @Test
+        @DisplayName("it should throw an exception if user doesn't exists")
+        public void caseThree() {
+                int page = 1;
+                int perPage = 5;
 
-        Exception exception = Assertions.assertThrows(NotFoundException.class, () -> {
-            this.sut.listByUser(UUID.randomUUID(), page, perPage);
-        });
+                Exception exception = Assertions.assertThrows(NotFoundException.class, () -> {
+                        this.sut.listByUser(UUID.randomUUID(), page, perPage);
+                });
 
-        Assertions.assertEquals("User not found.", exception.getMessage());
-    }
+                Assertions.assertEquals("User not found.", exception.getMessage());
+        }
 
-    public Investment investmentGenerator(UUID userId, BigDecimal value) {
-        NewInvestmentDto investment = new NewInvestmentDto();
-        investment.setAmount(value);
+        public Investment investmentGenerator(UUID userId, BigDecimal value) {
+                NewInvestmentDto investment = new NewInvestmentDto();
+                investment.setAmount(value);
 
-        return this.sut.create(investment, userId);
-    }
+                return this.sut.create(investment, userId);
+        }
 
-    public User userGenerator() {
-        User user = new User();
-        Wallet wallet = new Wallet();
+        public User userGenerator() {
+                User user = new User();
+                Wallet wallet = new Wallet();
 
-        user.setEmail("johndoe@test.com");
-        user.setName("John Doe");
-        user.setPasswordHash("123456");
-        user.setId(UUID.randomUUID());
+                user.setEmail("johndoe@test.com");
+                user.setName("John Doe");
+                user.setPasswordHash("123456");
+                user.setId(UUID.randomUUID());
 
-        wallet.setAmount(BigDecimal.valueOf(0));
-        wallet.setUser(user);
+                wallet.setAmount(BigDecimal.valueOf(0));
+                wallet.setUser(user);
 
-        Wallet walletCreation = this.walletRepositoryTest.save(wallet);
+                Wallet walletCreation = this.walletRepositoryTest.save(wallet);
 
-        user.setWallet(walletCreation);
+                user.setWallet(walletCreation);
 
-        return this.userRepositoryTest.save(user);
-    }
+                return this.userRepositoryTest.save(user);
+        }
 }

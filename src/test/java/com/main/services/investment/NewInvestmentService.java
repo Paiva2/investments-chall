@@ -46,13 +46,13 @@ public class NewInvestmentService {
         User user = this.userGenerator();
 
         NewInvestmentDto newInvestment = new NewInvestmentDto();
-        newInvestment.setAmount(BigDecimal.valueOf(100.00));
+        newInvestment.setAmount(new BigDecimal("1000.24"));
         newInvestment.setInvestmentDate(Instant.parse("2024-01-01T03:25:59.887Z"));
 
         Investment investment = this.sut.create(newInvestment, user.getId());
 
         Assertions.assertNotNull(investment);
-        Assertions.assertEquals(new BigDecimal("1.00"), investment.getInitialAmount()); // 100
+        Assertions.assertEquals(new BigDecimal("10.002"), investment.getInitialAmount()); // 1000.24
         Assertions.assertEquals(newInvestment.getInvestmentDate(), investment.getCreatedAt());
     }
 
@@ -62,16 +62,16 @@ public class NewInvestmentService {
         User user = this.userGenerator();
 
         NewInvestmentDto newInvestment = new NewInvestmentDto();
-        newInvestment.setAmount(BigDecimal.valueOf(1000));
+        newInvestment.setAmount(new BigDecimal("2592.10"));
         // 2 months ago
         newInvestment.setInvestmentDate(ZonedDateTime.now().minusMonths(2).toInstant());
 
         Investment investment = this.sut.create(newInvestment, user.getId());
 
         Assertions.assertNotNull(investment);
-        Assertions.assertEquals(new BigDecimal("10.00"), investment.getInitialAmount()); // 1000
+        Assertions.assertEquals(new BigDecimal("25.921"), investment.getInitialAmount()); // 2592.10
         Assertions.assertEquals(newInvestment.getInvestmentDate(), investment.getCreatedAt());
-        Assertions.assertEquals(new BigDecimal("0.10"), investment.getCurrentProfit()); // 10.42
+        Assertions.assertEquals(new BigDecimal("0.270"), investment.getCurrentProfit()); // 27.00
     }
 
     @Test
@@ -116,7 +116,7 @@ public class NewInvestmentService {
     @DisplayName("it should throw exception if investment date is after today")
     public void caseFive() {
         NewInvestmentDto newInvestment = new NewInvestmentDto();
-        newInvestment.setAmount(BigDecimal.valueOf(100.0));
+        newInvestment.setAmount(BigDecimal.valueOf(100.00));
 
         Exception exception = Assertions.assertThrows(NotFoundException.class, () -> {
             this.sut.create(newInvestment, UUID.randomUUID());

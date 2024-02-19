@@ -21,7 +21,6 @@ public class NewInvestmentResponseDto {
 
     public NewInvestmentResponseDto(UUID id, BigDecimal initialAmount, BigDecimal currentProfit,
             Instant createdAt) {
-
         this.id = id;
         this.initialAmount = this.multiplyForView(initialAmount);
         this.currentProfit = this.multiplyForView(currentProfit);
@@ -30,6 +29,6 @@ public class NewInvestmentResponseDto {
     };
 
     private BigDecimal multiplyForView(BigDecimal value) {
-        return value.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.DOWN);
+        return value.multiply(new BigDecimal("100")).setScale(2, RoundingMode.DOWN);
     }
 }
