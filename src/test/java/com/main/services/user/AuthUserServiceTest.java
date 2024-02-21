@@ -18,15 +18,15 @@ import com.main.repositories.WalletRepositoryTest;
 
 @ActiveProfiles("test")
 public class AuthUserServiceTest {
-    private BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+    protected BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-    private UserRepositoryTest userRepositoryTest;
+    protected UserRepositoryTest userRepositoryTest;
 
-    private WalletRepositoryTest walletRepositoryTest;
+    protected WalletRepositoryTest walletRepositoryTest;
 
-    private WalletService walletService;
+    protected WalletService walletService;
 
-    private UserService sut;
+    protected UserService sut;
 
     @BeforeEach
     public void setup() {

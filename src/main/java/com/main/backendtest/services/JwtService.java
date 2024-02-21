@@ -18,11 +18,11 @@ import com.main.backendtest.exceptions.BadRequestException;
 @Component
 public class JwtService {
     @Value("${api.security.token.secret}")
-    private String secret;
+    protected String secret;
 
-    private String issuer;
+    protected String issuer;
 
-    private long expTime = 60 * 60 * 24 * 7; // 7d
+    protected long expTime = 60 * 60 * 24 * 7; // 7d
 
     public String sign(UUID subject) {
         String token = null;
@@ -58,7 +58,7 @@ public class JwtService {
     }
 
     protected Instant setTokenExp() {
-        ZoneId zoneId = ZoneId.systemDefault();
+        ZoneId zoneId = ZoneId.of("Europe/London");
 
         return Instant.now().plusSeconds(expTime).atZone(zoneId).toInstant();
     }

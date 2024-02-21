@@ -1,12 +1,16 @@
 package com.main.repositories;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,7 +34,7 @@ public class InvestmentRepositoryTest implements InvestmentInterface {
             investiment.setId(UUID.randomUUID());
 
             if (investiment.getCreatedAt() == null) {
-                investiment.setCreatedAt(Instant.now());
+                investiment.setCreatedAt(this.getNowInstantInPattern());
             }
 
             investiment.setCurrentProfit(
@@ -51,6 +55,15 @@ public class InvestmentRepositoryTest implements InvestmentInterface {
         return handleInvestment;
     }
 
+    protected Instant getNowInstantInPattern() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                .withZone(ZoneOffset.UTC);
+
+        LocalDateTime ldt = LocalDateTime.parse(formatter.format(Instant.now()), formatter);
+
+        return ldt.toInstant(ZoneId.of("Europe/London").getRules().getOffset(ldt));
+    }
+
     @Override
     public Page<Investment> findByWalletId(UUID walletId, Pageable pageable) {
         List<Investment> userInvestments = this.investments.stream()
@@ -68,7 +81,12 @@ public class InvestmentRepositoryTest implements InvestmentInterface {
 
     @Override
     public List<Investment> getAllCreatedToday() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAllCreatedToday'");
+    }
+
+    @Override
+    public Optional<Investment> findById(UUID investmentId) {
+        return this.investments.stream()
+                .filter(investment -> investment.getId().equals(investmentId)).findFirst();
     }
 }

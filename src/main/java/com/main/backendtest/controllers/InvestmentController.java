@@ -14,6 +14,7 @@ import com.main.backendtest.dtos.request.investment.NewInvestmentDto;
 import com.main.backendtest.dtos.response.InvestmentDto;
 import com.main.backendtest.dtos.response.NewInvestmentResponseDto;
 import com.main.backendtest.entities.Investment;
+import com.main.backendtest.entities.Wallet;
 import com.main.backendtest.services.InvestmentService;
 import com.main.backendtest.services.JwtService;
 
@@ -57,6 +58,18 @@ public class InvestmentController {
         responseBody.put("investments", investmentsDto);
 
         return ResponseEntity.ok().body(responseBody);
+    }
+
+    @PatchMapping("/withdraw/{investmentId}")
+    public ResponseEntity<Wallet> withdrawInvestment(
+            @PathVariable(name = "investmentId", required = true) UUID investmentId,
+            @RequestHeader(name = "Authorization", required = true) String jwtToken) {
+        UUID parseToken = this.getParsedAuth(jwtToken);
+
+        Wallet performWithdraw =
+                this.investmentService.withdrawnInvestment(parseToken, investmentId);
+
+        return ResponseEntity.ok().body(performWithdraw);
     }
 
     private UUID getParsedAuth(String token) {

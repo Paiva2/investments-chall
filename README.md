@@ -1,4 +1,4 @@
-# Building - Backend challenge
+# Backend challenge
 
 ## Scope
 
@@ -14,7 +14,7 @@ In this challenge you should build an API for an application that stores and man
    1. Expected balance should be the sum of the invested amount and the [gains]. - Done
    2. If an investment was already withdrawn then the balance must reflect the gains of that investment.
 
-3. **Withdrawal** of a investment.
+3. **Withdraw** of a investment - done.
 
    1. The withdraw will always be the sum of the initial amount and its gains,
       partial withdrawn is not supported.
@@ -36,9 +36,16 @@ When money is withdrawn, tax is triggered. Taxes apply only to the profit/gain p
 
 The tax percentage changes according to the age of the investment:
 
-- If it is less than one year old, the percentage will be 22.5% (tax = 45.00).
-- If it is between one and two years old, the percentage will be 18.5% (tax = 37.00).
-- If older than two years, the percentage will be 15% (tax = 30.00).
+- If it is less than one year old, the percentage will be 22.5%.
+- If it is between one and two years old, the percentage will be 18.5%.
+- If older than two years, the percentage will be 15%.
+
+### Technologies
+
+- Java 17
+- SpringBoot
+- Docker
+- Postgres
 
 ## Credits
 

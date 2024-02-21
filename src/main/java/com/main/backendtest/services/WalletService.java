@@ -9,7 +9,7 @@ import com.main.backendtest.interfaces.WalletInterface;
 
 @Service
 public class WalletService {
-    private final WalletInterface walletRepository;
+    protected final WalletInterface walletRepository;
 
     public WalletService(WalletInterface walletRepository) {
         this.walletRepository = walletRepository;

@@ -19,11 +19,11 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
-    private BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+    protected BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-    private final UserInterface userRepository;
+    protected final UserInterface userRepository;
 
-    private final WalletService walletService;
+    protected final WalletService walletService;
 
     public UserService(UserInterface userRepository, WalletService walletService) {
         this.userRepository = userRepository;

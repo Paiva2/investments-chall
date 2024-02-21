@@ -29,17 +29,17 @@ import com.main.repositories.UserRepositoryTest;
 import com.main.repositories.WalletRepositoryTest;
 
 @ActiveProfiles("test")
-public class ListByuserService {
-        private UserRepositoryTest userRepositoryTest;
+public class ListByuserServiceTest {
+        protected UserRepositoryTest userRepositoryTest;
 
-        private WalletRepositoryTest walletRepositoryTest;
+        protected WalletRepositoryTest walletRepositoryTest;
 
-        private InvestmentRepositoryTest investmentRepositoryTest;
+        protected InvestmentRepositoryTest investmentRepositoryTest;
 
-        private InvestmentService sut;
+        protected InvestmentService sut;
 
         @BeforeEach
-        public void setup() throws Exception {
+        public void setup() {
                 this.userRepositoryTest = new UserRepositoryTest();
                 this.walletRepositoryTest = new WalletRepositoryTest();
                 this.investmentRepositoryTest = new InvestmentRepositoryTest();

@@ -14,7 +14,7 @@ import com.main.backendtest.repositories.InvestmentRepositoryImpl;
 @Component
 @EnableScheduling
 public class InvestmentGainHandlerCron {
-    private final InvestmentRepositoryImpl investmentRepository;
+    protected final InvestmentRepositoryImpl investmentRepository;
 
     public InvestmentGainHandlerCron(InvestmentRepositoryImpl investmentRepository) {
         this.investmentRepository = investmentRepository;

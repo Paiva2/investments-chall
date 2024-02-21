@@ -9,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -40,6 +40,7 @@ public class Wallet {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "wallet")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Investment> investiments;

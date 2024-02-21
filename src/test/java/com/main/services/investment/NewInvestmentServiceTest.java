@@ -21,14 +21,14 @@ import com.main.repositories.InvestmentRepositoryTest;
 import com.main.repositories.UserRepositoryTest;
 import com.main.repositories.WalletRepositoryTest;
 
-public class NewInvestmentService {
-    private UserRepositoryTest userRepositoryTest;
+public class NewInvestmentServiceTest {
+    protected UserRepositoryTest userRepositoryTest;
 
-    private WalletRepositoryTest walletRepositoryTest;
+    protected WalletRepositoryTest walletRepositoryTest;
 
-    private InvestmentRepositoryTest investmentRepositoryTest;
+    protected InvestmentRepositoryTest investmentRepositoryTest;
 
-    private InvestmentService sut;
+    protected InvestmentService sut;
 
     @BeforeEach
     public void setup() throws Exception {

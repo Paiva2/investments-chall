@@ -23,7 +23,7 @@ public class Investment {
     private BigDecimal initialAmount;
 
     @Column(name = "current_profit", nullable = false, precision = 20, scale = 3)
-    private BigDecimal currentProfit = BigDecimal.valueOf(0.0);
+    private BigDecimal currentProfit = new BigDecimal("0");
 
     @Column(name = "withdrawn_date", nullable = true)
     private Instant withdrawnDate;
